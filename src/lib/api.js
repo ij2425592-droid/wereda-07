@@ -1,126 +1,125 @@
-/**
- * Strapi Base URL ማስተካከያ
- */
-export function getStrapiURL(path = '') {
-  return `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${path}`;
-}
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
 
 /**
- * ዋና የ Strapi API መጠሪያ ፈንክሽን (Fetch API)
+ * ከ Strapi ጋር የሚደረጉ የ-HTTP ጥያቄዎች ማዕከላዊ ፈፃሚ
  */
-export async function fetchAPI(path, urlParamsObject = {}, options = {}) {
-  try {
-    const defaultHeaders = {
+async function fetchAPI(endpoint, options = {}) {
+  const defaultOptions = {
+    headers: {
       'Content-Type': 'application/json',
-      ...(process.env.STRAPI_API_TOKEN && {
-        Authorization: `Bearer ${process.env.STRAPI_API_TOKEN}`,
-      }),
-    };
+      ...(STRAPI_TOKEN && { Authorization: `Bearer ${STRAPI_TOKEN}` }),
+    },
+  };
 
-    const mergedOptions = {
-      headers: {
-        ...defaultHeaders,
-        ...options.headers,
-      },
-      ...options,
-    };
+  const mergedOptions = {
+    ...defaultOptions,
+    ...options,
+    headers: {
+      ...defaultOptions.headers,
+      ...options.headers,
+    },
+  };
 
-    // Query parameters ማዘጋጀት
-    const queryParams = new URLSearchParams();
-    if (urlParamsObject && Object.keys(urlParamsObject).length > 0) {
-      Object.entries(urlParamsObject).forEach(([key, value]) => {
-        queryParams.append(key, value);
-      });
-    }
+  const url = `${STRAPI_URL}/api${endpoint}`;
 
-    const queryString = queryParams.toString();
-    const requestUrl = `${getStrapiURL(`/api${path}${queryString ? `?${queryString}` : ''}`)}`;
-
-    const res = await fetch(requestUrl, mergedOptions);
-
+  try {
+    const res = await fetch(url, mergedOptions);
     if (!res.ok) {
-      console.warn(`Strapi Fetch Warning [${res.status}]: ${res.statusText} at ${requestUrl}`);
+      console.warn(`Strapi API response not OK [${res.status}] at: ${url}`);
       return null;
     }
 
     const data = await res.json();
     return data;
   } catch (error) {
-    console.error(`API Fetch Error at ${path}:`, error);
+    console.error(`API Fetch Failed at ${url}:`, error.message);
     return null;
   }
 }
 
 /**
- * 1. ወቅታዊ ዜናዎችን ከ Strapi መቀበያ (News List)
+ * 1. ወቅታዊ ዜናዎችን መቀበያ
  */
 export async function getArticles(category = null, limit = 10) {
-  const params = {
-    'populate': '*',
-    'sort': 'publishedAt:desc',
-    'pagination[limit]': limit.toString(),
-  };
-
-  if (category && category !== 'all') {
-    params['filters[category][$eq]'] = category;
+  let endpoint = `/articles?populate=*&sort=publishedAt:desc&pagination[limit]=${limit}`;
+  
+  if (category && category !== 'ሁሉም') {
+    endpoint += `&filters[category][$eq]=${encodeURIComponent(category)}`;
   }
 
-  const response = await fetchAPI('/articles', params, { cache: 'no-store' });
+  const response = await fetchAPI(endpoint, { cache: 'no-store' });
   return response?.data || [];
 }
 
 /**
- * 2. ነጠላ ዜናን በ Slug መፈለጊያ (Single Article)
+ * 2. የነጠላ ዜና ዝርዝር በ Slug
  */
 export async function getArticleBySlug(slug) {
-  const params = {
-    'filters[slug][$eq]': slug,
-    'populate': '*',
-  };
-
-  const response = await fetchAPI('/articles', params, { next: { revalidate: 60 } });
-  
-  if (response?.data && response.data.length > 0) {
-    return response.data[0];
-  }
-  return null;
+  const endpoint = `/articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`;
+  const response = await fetchAPI(endpoint, { cache: 'no-store' });
+  return response?.data?.length > 0 ? response.data[0] : null;
 }
 
 /**
- * 3. የሚዲያ ማህደር መረጃዎች መቀበያ (Media Gallery)
+ * 3. የወረዳው አገልግሎቶችን መቀበያ
  */
-export async function getMediaGallery(type = null) {
-  const params = {
-    'populate': '*',
-    'sort': 'createdAt:desc',
-  };
-
-  if (type && type !== 'all') {
-    params['filters[mediaType][$eq]'] = type;
-  }
-
-  const response = await fetchAPI('/media-galleries', params, { next: { revalidate: 60 } });
+export async function getPublicServices() {
+  const endpoint = `/public-services?populate=*&sort=createdAt:asc`;
+  const response = await fetchAPI(endpoint, { cache: 'no-store' });
   return response?.data || [];
 }
 
 /**
- * 4. የ Strapi ምስሎችን ሙሉ URL መስጫ
+ * 4. የሚዲያና ፎቶ ጋለሪ መቀበያ
  */
-export function getStrapiMediaUrl(media) {
-  if (!media) {
-    return '/images/placeholder.jpg';
+export async function getMediaGalleries(type = null) {
+  let endpoint = `/media-galleries?populate=*&sort=eventDate:desc`;
+  
+  if (type && type !== 'all') {
+    endpoint += `&filters[type][$eq]=${type}`;
   }
 
-  // Cloudinary ወይም Strapi Image URL አወሳሰድ
-  const url = media.data?.attributes?.url || media.attributes?.url || media.url;
+  const response = await fetchAPI(endpoint, { cache: 'no-store' });
+  return response?.data || [];
+}
+
+/**
+ * 5. የነዋሪዎች ቅሬታ ወይም ጥቆማ መላኪያ
+ */
+export async function submitCitizenFeedback(feedbackData) {
+  const endpoint = `/citizen-feedbacks`;
   
-  if (!url) {
-    return '/images/placeholder.jpg';
-  }
+  const response = await fetchAPI(endpoint, {
+    method: 'POST',
+    body: JSON.stringify({ data: feedbackData }),
+    cache: 'no-store',
+  });
+
+  return response;
+}
+
+/**
+ * 6. የጉዳይ ሁኔታ መከታተያ
+ */
+export async function trackFeedbackByCode(trackingCode) {
+  const endpoint = `/citizen-feedbacks?filters[trackingCode][$eq]=${encodeURIComponent(trackingCode)}`;
+  const response = await fetchAPI(endpoint, { cache: 'no-store' });
+  return response?.data?.length > 0 ? response.data[0] : null;
+}
+
+/**
+ * 7. የምስል URL Helper
+ */
+export function getStrapiMediaUrl(mediaObject) {
+  if (!mediaObject) return '/images/placeholder.jpg';
+
+  const url = mediaObject.data?.attributes?.url || mediaObject.attributes?.url || mediaObject.url;
+  if (!url) return '/images/placeholder.jpg';
 
   if (url.startsWith('http') || url.startsWith('//')) {
     return url;
   }
 
-  return `${getStrapiURL()}${url}`;
+  return `${STRAPI_URL}${url}`;
 }

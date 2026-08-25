@@ -8,23 +8,15 @@ export const metadata = {
   description: 'ወቅታዊ የወረዳው የልማት ዜናዎች እና ይፋዊ መረጃዎች',
 };
 
-// Build ጊዜ Strapi ባይኖርም እንኳን ገጹ እንዳይሰበር Dynamic Rendering እናደርገዋለን
 export const dynamic = 'force-dynamic';
 
 export default async function NewsPage() {
-  let strapiArticles = [];
-  
-  try {
-    const data = await getArticles();
-    if (Array.isArray(data)) {
-      strapiArticles = data;
-    }
-  } catch (error) {
-    console.error('Error fetching articles:', error);
-  }
+  const articlesData = await getArticles();
+  const strapiArticles = Array.isArray(articlesData) ? articlesData : [];
 
   const hasArticles = strapiArticles.length > 0;
-  const featuredArticle = hasArticles ? strapiArticles[0] : null;
+  const featuredItem = hasArticles ? strapiArticles[0] : null;
+  const featuredArticle = featuredItem?.attributes || featuredItem;
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">
@@ -40,14 +32,14 @@ export default async function NewsPage() {
           </p>
         </div>
 
-        {/* Strapi ካልበራ ወይም ዳታ ከሌለ የሚያሳየው ማሳሰቢያ */}
+        {/* Strapi ግንኙነት ከሌለ ወይም ዳታ ባዶ ከሆነ */}
         {!hasArticles && (
           <div className="flex items-center gap-3 p-6 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900">
             <AlertTriangle className="w-6 h-6 text-amber-600 shrink-0" />
             <div>
-              <h4 className="font-bold text-sm">ዜናዎችን መጫን አልተቻለም</h4>
+              <h4 className="font-bold text-sm">ዜናዎችን መጫን አልተቻለም (ወይም ዳታቤዙ ባዶ ነው)</h4>
               <p className="text-xs text-amber-800 mt-0.5">
-                በዳታቤዝ ውስጥ የተመዘገበ ዜና የለም ወይም የStrapi ግንኙነት አልተፈጠረም።
+                እባክዎ Strapi ላይ ዜና መግባቱን እና የ Public API ፍቃድ መሰጠቱን ያረጋግጡ።
               </p>
             </div>
           </div>
@@ -59,8 +51,8 @@ export default async function NewsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[400px]">
               <div className="relative h-64 lg:h-auto lg:col-span-7">
                 <Image
-                  src={getStrapiMediaUrl(featuredArticle.attributes?.coverImage || featuredArticle.coverImage)}
-                  alt={featuredArticle.attributes?.title || featuredArticle.title || 'Featured Article'}
+                  src={getStrapiMediaUrl(featuredArticle.coverImage)}
+                  alt={featuredArticle.title || 'Featured Article'}
                   fill
                   priority
                   className="object-cover"
@@ -75,26 +67,26 @@ export default async function NewsPage() {
                 </div>
                 <div className="flex items-center gap-2 text-xs text-slate-400">
                   <User className="w-3.5 h-3.5" />
-                  <span>{featuredArticle.attributes?.author || featuredArticle.author || 'ኮሚዩኒኬሽን'}</span>
+                  <span>{featuredArticle.author || 'ኮሚዩኒኬሽን'}</span>
                   <span>•</span>
                   <Calendar className="w-3.5 h-3.5" />
                   <time>
-                    {featuredArticle.attributes?.publishedAt || featuredArticle.publishedAt
-                      ? new Date(featuredArticle.attributes?.publishedAt || featuredArticle.publishedAt).toLocaleDateString('am-ET')
+                    {featuredArticle.publishedAt
+                      ? new Date(featuredArticle.publishedAt).toLocaleDateString('am-ET')
                       : ''}
                   </time>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-white hover:text-blue-300 transition-colors">
-                  <Link href={`/news/${featuredArticle.attributes?.slug || featuredArticle.slug || '#'}`}>
-                    {featuredArticle.attributes?.title || featuredArticle.title}
+                  <Link href={`/news/${featuredArticle.slug || '#'}`}>
+                    {featuredArticle.title}
                   </Link>
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-300 line-clamp-3">
-                  {featuredArticle.attributes?.excerpt || featuredArticle.excerpt}
+                  {featuredArticle.excerpt}
                 </p>
                 <div className="pt-2">
                   <Link
-                    href={`/news/${featuredArticle.attributes?.slug || featuredArticle.slug || '#'}`}
+                    href={`/news/${featuredArticle.slug || '#'}`}
                     className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-5 py-2.5 text-xs font-bold text-white shadow-md transition-colors"
                   >
                     <span>ዝርዝሩን አንብብ</span>
@@ -109,13 +101,13 @@ export default async function NewsPage() {
         {/* News Grid */}
         {hasArticles && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {strapiArticles.map((item) => {
-              const article = item.attributes || item;
+            {strapiArticles.map((rawItem) => {
+              const article = rawItem.attributes || rawItem;
               const imageUrl = getStrapiMediaUrl(article?.coverImage);
 
               return (
                 <article
-                  key={item.id}
+                  key={rawItem.id || article.slug}
                   className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                 >
                   <div className="relative h-48 w-full overflow-hidden bg-slate-100">

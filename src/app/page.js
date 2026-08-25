@@ -139,7 +139,7 @@ export default function HomePage() {
               className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
             >
               <div className="relative h-48 w-full overflow-hidden bg-slate-100">
-                < Image
+                <Image
                   src={article.coverImage}
                   alt={article.title}
                   fill

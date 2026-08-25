@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 2. Put this exact block back (WITHOUT the url property)
+datasource db {
+  provider = "postgresql"
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String   @db.Text
+  category    String
+  author      String   @default("የኮሚዩኒኬሽን ጉዳዮች")
+  coverImage  String
+  published   Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MediaGallery {
+  id        String   @id @default(cuid())
+  title     String
+  category  String
+  mediaType String   // "photo" or "video"
+  mediaUrl  String
+  eventDate DateTime @default(now())
+  createdAt DateTime @default(now())
+}
+
+model CitizenFeedback {
+  id           String   @id @default(cuid())
+  trackingCode String   @unique
+  fullName     String
+  phone        String
+  subject      String
+  message      String   @db.Text
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+}

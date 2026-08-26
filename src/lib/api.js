@@ -61,6 +61,11 @@ export async function submitCitizenFeedback(data) {
 }
 
 export function getStrapiMediaUrl(mediaUrl) {
-  if (!mediaUrl) return '/images/placeholder.jpg';
+  if (!mediaUrl || mediaUrl === '/images/placeholder.jpg') {
+    return '/images/news-1.jpg';
+  }
+  if (typeof mediaUrl === 'string' && mediaUrl.includes('unsplash.com/photos/')) {
+    return '/images/news-1.jpg';
+  }
   return mediaUrl;
 }

@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  Menu, 
-  X, 
-  PhoneCall, 
-  Globe, 
-  Search, 
+import {
+  Menu,
+  X,
+  PhoneCall,
+  Globe,
+  Search,
   Building2,
   FileText,
   Megaphone,
@@ -18,6 +18,7 @@ import {
 
 const navLinks = [
   { name: 'ዋና ገጽ', href: '/' },
+  { name: 'ስለ እኛ', href: '/about' },
   { name: 'ዜና እና መረጃ', href: '/news' },
   { name: 'አገልግሎቶች', href: '/services' },
   { name: 'የሚዲያ ጋለሪ', href: '/gallery' },
@@ -30,13 +31,13 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200">
-      
+
       {/* Top Notification / Emergency Bar */}
       <div className="bg-slate-900 text-slate-200 px-4 py-1.5 text-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>የወረዳው የኮሚዩኒኬሽን ጉዳዮች ጽሕፈት ቤት ይፋዊ ድረ-ገጽ</span>
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" >
+              ቦሌ ክፍለ ከተማ አስተዳደር የኮሙኒኬሽን ጽሕፈት ቤት ይፋዊ ፖርታል</span>
           </div>
           <div className="flex items-center gap-4 text-slate-300">
             <a href="tel:994" className="flex items-center gap-1.5 hover:text-white transition-colors">
@@ -55,18 +56,18 @@ export default function Navbar() {
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          
+
           {/* Brand / Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-blue-700 text-white shadow-md group-hover:bg-blue-800 transition-colors">
               <Building2 className="w-6 h-6" />
             </div>
             <div>
-              <span className="block text-lg font-black text-slate-900 tracking-tight leading-none">
-                ወረዳ ጽሕፈት ቤት
+              <span className="block text-base sm:text-lg font-black text-slate-900 tracking-tight leading-none">
+                ቦሌ ክፍለ ከተማ
               </span>
-              <span className="block text-xs font-semibold text-blue-700 tracking-wider uppercase mt-1">
-                ሚዲያና ኮሚዩኒኬሽን
+              <span className="block text-[11px] sm:text-xs font-semibold text-blue-700 tracking-wider uppercase mt-1">
+                የኮሙኒኬሽን ጽሕፈት ቤት
               </span>
             </div>
           </Link>
@@ -79,11 +80,10 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
-                    isActive
-                      ? 'bg-blue-50 text-blue-700 font-bold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${isActive
+                    ? 'bg-blue-50 text-blue-700 font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    }`}
                 >
                   {link.name}
                 </Link>
@@ -123,11 +123,10 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`block px-4 py-3 rounded-xl text-base font-semibold ${
-                  isActive
-                    ? 'bg-blue-50 text-blue-700'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
+                className={`block px-4 py-3 rounded-xl text-base font-semibold ${isActive
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-slate-700 hover:bg-slate-100'
+                  }`}
               >
                 {link.name}
               </Link>

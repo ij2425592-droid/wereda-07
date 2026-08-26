@@ -19,10 +19,10 @@ export default function Footer() {
               <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-600 text-white">
                 <Building2 className="w-5 h-5" />
               </div>
-              <span className="text-lg font-black text-white">ወረዳ ጽሕፈት ቤት</span>
+              <span className="text-lg font-black text-white">ቦሌ ክፍለ ከተማ ጽሕፈት ቤት</span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
-              የወረዳችን የኮሚዩኒኬሽን ጉዳዮች ጽሕፈት ቤት ይፋዊ የሚዲያ ማዕከል። ፈጣን፣ ትክክለኛና ተዓማኒ መረጃዎችን ለህዝብ ተደራሽ እናደርጋለን።
+              የቦሌ ክፍለ ከተማ አስተዳደር የኮሙኒኬሽን ጽሕፈት ቤት ይፋዊ የሚዲያ ማዕከል። ፈጣን፣ ትክክለኛና ተዓማኒ መረጃዎችን ለህዝብ ተደራሽ እናደርጋለን።
             </p>
             <div className="flex items-center gap-3 pt-2">
               {/* Facebook Icon */}
@@ -66,6 +66,9 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="text-sm font-bold text-white uppercase tracking-wider">ፈጣን ማያያዣዎች</h4>
             <ul className="space-y-2.5 text-sm">
+              <li>
+                <Link href="/about" className="hover:text-white transition-colors text-blue-400 font-semibold">ስለ እኛ (ራዕይና ተልዕኮ)</Link>
+              </li>
               <li>
                 <Link href="/news" className="hover:text-white transition-colors">ወቅታዊ ዜናዎች</Link>
               </li>

@@ -13,6 +13,7 @@ import {
   Radio
 } from 'lucide-react';
 import { mockArticles } from '../data/mockNews';
+import VisionMissionSection from '../components/common/VisionMissionSection';
 
 export default function HomePage() {
   const latestNews = mockArticles.slice(0, 3);
@@ -182,7 +183,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. Quick Public Services */}
+      {/* 4. Institutional Vision, Mission & Values */}
+      <VisionMissionSection />
+
+      {/* 5. Quick Public Services */}
       <section className="bg-slate-100 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center max-w-2xl mx-auto space-y-2">

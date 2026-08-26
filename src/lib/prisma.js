@@ -6,7 +6,16 @@ const globalForPrisma = global;
 
 function createPrismaClient() {
     const connectionString = process.env.DATABASE_URL;
-    const pool = new Pool({ connectionString });
+    if (!connectionString) {
+        console.warn('⚠️ [Prisma] DATABASE_URL is not set in environment variables! Please configure it in your Vercel Project Settings.');
+    }
+
+    const pool = new Pool({
+        connectionString,
+        ssl: connectionString && connectionString.includes('supabase.com')
+            ? { rejectUnauthorized: false }
+            : undefined,
+    });
     const adapter = new PrismaPg(pool);
 
     return new PrismaClient({ adapter });

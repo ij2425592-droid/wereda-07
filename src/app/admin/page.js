@@ -1,18 +1,50 @@
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { logoutAdmin, deleteArticle } from './actions';
-import { Plus, Trash2, ExternalLink, LogOut, Newspaper } from 'lucide-react';
+import { Plus, Trash2, ExternalLink, LogOut, Newspaper, AlertCircle } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
-    const articles = await prisma.article.findMany({
-        orderBy: { createdAt: 'desc' },
-    });
+    const cookieStore = await cookies();
+    const session = cookieStore.get('admin_session');
+    if (!session || session.value !== 'authenticated') {
+        redirect('/admin/login');
+    }
+
+    let articles = [];
+    let dbError = null;
+
+    try {
+        articles = await prisma.article.findMany({
+            orderBy: { createdAt: 'desc' },
+        });
+    } catch (error) {
+        console.error('Failed to load articles in admin dashboard:', error);
+        dbError = error?.message || 'ዳታቤዝ ማግኘት አልተቻለም።';
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 p-6 md:p-10">
             <div className="max-w-6xl mx-auto space-y-8">
+
+                {/* Database Warning if error */}
+                {dbError && (
+                    <div className="p-5 bg-amber-50 border border-amber-300 rounded-2xl text-amber-900 shadow-sm space-y-2">
+                        <div className="flex items-center gap-2 font-bold text-amber-900 text-sm">
+                            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+                            <span>የዳታቤዝ ግንኙነት ስህተት (Database Connection Error)</span>
+                        </div>
+                        <p className="text-xs text-amber-800 leading-relaxed">
+                            ዳታቤዙን ማገናኘት አልተቻለም። በ Vercel ላይ እየተጠቀሙ ከሆነ፡ እባክዎ በ <strong>Vercel Dashboard → Project Settings → Environment Variables</strong> ውስጥ <code>DATABASE_URL</code> እና <code>ADMIN_PASSWORD</code> መግባታቸውን ያረጋግጡ።
+                        </p>
+                        <p className="text-[11px] font-mono text-slate-600 bg-white/80 p-2.5 rounded-xl border border-amber-200 truncate">
+                            ስህተት፡ {dbError}
+                        </p>
+                    </div>
+                )}
 
                 {/* Top Navbar */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">

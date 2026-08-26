@@ -51,11 +51,12 @@ export default async function NewsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[400px]">
               <div className="relative h-64 lg:h-auto lg:col-span-7">
                 <Image
-                  src={imageUrl}
-                  alt="Featured News"
+                  src={getStrapiMediaUrl(featuredArticle.coverImage)}
+                  alt={featuredArticle.title || 'Featured Article'}
                   fill
                   priority
                   className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 60vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent lg:hidden" />
               </div>

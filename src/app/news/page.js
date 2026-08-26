@@ -21,7 +21,7 @@ export default async function NewsPage() {
   return (
     <div className="min-h-screen bg-slate-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        
+
         {/* Header Title */}
         <div className="border-b border-slate-200 pb-6">
           <h1 className="text-3xl sm:text-4xl font-black text-slate-900">
@@ -51,12 +51,11 @@ export default async function NewsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[400px]">
               <div className="relative h-64 lg:h-auto lg:col-span-7">
                 <Image
-                  src={getStrapiMediaUrl(featuredArticle.coverImage)}
-                  alt={featuredArticle.title || 'Featured Article'}
+                  src={imageUrl}
+                  alt="Featured News"
                   fill
                   priority
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 60vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent lg:hidden" />
               </div>

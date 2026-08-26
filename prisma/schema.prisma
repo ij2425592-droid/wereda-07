@@ -42,3 +42,10 @@ model CitizenFeedback {
   status       String   @default("pending")
   createdAt    DateTime @default(now())
 }
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Will store the bcrypt hashed string
+  name      String   @default("አድሚን")
+  createdAt DateTime @default(now())
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { 
   Building2, 
@@ -6,8 +8,11 @@ import {
   MapPin, 
   Send 
 } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-slate-950 text-slate-300 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
@@ -16,13 +21,13 @@ export default function Footer() {
           {/* Col 1: About Woreda */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-600 text-white">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/30">
                 <Building2 className="w-5 h-5" />
               </div>
-              <span className="text-lg font-black text-white">ቦሌ ክፍለ ከተማ ጽሕፈት ቤት</span>
+              <span className="text-lg font-black text-white">{t.footer.officeName}</span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
-              የቦሌ ክፍለ ከተማ አስተዳደር የኮሙኒኬሽን ጽሕፈት ቤት ይፋዊ የሚዲያ ማዕከል። ፈጣን፣ ትክክለኛና ተዓማኒ መረጃዎችን ለህዝብ ተደራሽ እናደርጋለን።
+              {t.footer.desc}
             </p>
             <div className="flex items-center gap-3 pt-2">
               {/* Facebook Icon */}
@@ -30,7 +35,7 @@ export default function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-900 hover:bg-blue-600 text-white transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 hover:bg-blue-600 text-white transition-colors border border-slate-800"
                 aria-label="Facebook"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -42,7 +47,7 @@ export default function Footer() {
                 href="https://t.me"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-900 hover:bg-sky-500 text-white transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 hover:bg-sky-500 text-white transition-colors border border-slate-800"
                 aria-label="Telegram"
               >
                 <Send className="w-4 h-4" />
@@ -52,7 +57,7 @@ export default function Footer() {
                 href="https://youtube.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-900 hover:bg-red-600 text-white transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900 hover:bg-red-600 text-white transition-colors border border-slate-800"
                 aria-label="YouTube"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -64,60 +69,60 @@ export default function Footer() {
 
           {/* Col 2: Quick Links */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">ፈጣን ማያያዣዎች</h4>
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider">{t.footer.quickLinksTitle}</h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/about" className="hover:text-white transition-colors text-blue-400 font-semibold">ስለ እኛ (ራዕይና ተልዕኮ)</Link>
+                <Link href="/about" className="hover:text-white transition-colors text-blue-400 font-semibold">{t.footer.aboutLink}</Link>
               </li>
               <li>
-                <Link href="/news" className="hover:text-white transition-colors">ወቅታዊ ዜናዎች</Link>
+                <Link href="/news" className="hover:text-white transition-colors">{t.footer.newsLink}</Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-white transition-colors">የአገልግሎት መመሪያዎች</Link>
+                <Link href="/services" className="hover:text-white transition-colors">{t.footer.servicesLink}</Link>
               </li>
               <li>
-                <Link href="/gallery" className="hover:text-white transition-colors">የፎቶና ቪዲዮ ማህደር</Link>
+                <Link href="/gallery" className="hover:text-white transition-colors">{t.footer.galleryLink}</Link>
               </li>
               <li>
-                <Link href="/feedback" className="hover:text-white transition-colors">የህዝብ አስተያየትና ጥቆማ</Link>
+                <Link href="/feedback" className="hover:text-white transition-colors">{t.footer.feedbackLink}</Link>
               </li>
             </ul>
           </div>
 
           {/* Col 3: Public Services */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">ዋና ዋና አገልግሎቶች</h4>
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider">{t.footer.servicesHeader}</h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/services" className="hover:text-white transition-colors">የነዋሪነት መታወቂያ አገልግሎት</Link>
+                <Link href="/services" className="hover:text-white transition-colors">{t.footer.serviceId}</Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-white transition-colors">የልደት እና የጋብቻ ምዝገባ</Link>
+                <Link href="/services" className="hover:text-white transition-colors">{t.footer.serviceVital}</Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-white transition-colors">የንግድ ፈቃድና እድሳት</Link>
+                <Link href="/services" className="hover:text-white transition-colors">{t.footer.serviceTrade}</Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-white transition-colors">የግንባታ ፈቃድ ማመልከቻ</Link>
+                <Link href="/services" className="hover:text-white transition-colors">{t.footer.serviceConst}</Link>
               </li>
             </ul>
           </div>
 
           {/* Col 4: Contact & Emergency */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">የአድራሻ መረጃ</h4>
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider">{t.footer.contactHeader}</h4>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
-                <span>ወረዳ ጽሕፈት ቤት ዋና ሕንፃ፣ አዲስ አበባ፣ ኢትዮጵያ</span>
+                <span>{t.footer.address}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-blue-500 shrink-0" />
-                <span>+251 11 XXX XXXX / 994</span>
+                <span>{t.footer.phone}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-blue-500 shrink-0" />
-                <span>info@woreda.gov.et</span>
+                <span>{t.footer.email}</span>
               </li>
             </ul>
           </div>
@@ -126,11 +131,11 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-slate-800 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} የወረዳ ጽሕፈት ቤት ሚዲያና ኮሚዩኒኬሽን ጉዳዮች።</p>
+          <p>© {new Date().getFullYear()} {t.footer.copyright}</p>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-slate-400">የግላዊነት ፖሊሲ</Link>
+            <Link href="/privacy" className="hover:text-slate-400">{t.footer.privacyPolicy}</Link>
             <span>•</span>
-            <Link href="/terms" className="hover:text-slate-400">የአጠቃቀም ደንቦች</Link>
+            <Link href="/terms" className="hover:text-slate-400">{t.footer.termsOfUse}</Link>
           </div>
         </div>
       </div>

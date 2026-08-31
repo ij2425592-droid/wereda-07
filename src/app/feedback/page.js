@@ -1,39 +1,32 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { 
   Send, 
   CheckCircle2, 
   Search, 
-  FileText, 
   AlertTriangle, 
   Clock, 
   ShieldCheck, 
-  UploadCloud,
-  Copy,
-  Check
+  UploadCloud, 
+  Copy, 
+  Check 
 } from 'lucide-react';
-
-const KEBELES = [
-  'ቀበሌ 01',
-  'ቀበሌ 02',
-  'ቀበሌ 03',
-  'ቀበሌ 04',
-  'ቀበሌ 05',
-  'ቀበሌ 06',
-  'ቀበሌ 07',
-  'ቀበሌ 08'
-];
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function FeedbackPage() {
+  const { t, language } = useLanguage();
+  const f = t.feedback;
+
   const [activeTab, setActiveTab] = useState('submit'); // 'submit' | 'track'
   
   // Form State
   const [formData, setFormData] = useState({
     fullName: '',
     phoneNumber: '',
-    category: 'ቅሬታ',
-    kebele: 'ቀበሌ 01',
+    category: f.categoriesList[0] || 'ቅሬታ',
+    kebele: f.kebeleList[0] || 'ቀበሌ 01',
     subject: '',
     message: '',
     isAnonymous: false,
@@ -53,12 +46,11 @@ export default function FeedbackPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Mock API Delay እና Tracking ID ማመንጫ (ለምሳሌ: WRD-2026-8941)
     setTimeout(() => {
       const generatedCode = `WRD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
       setSubmittedCode(generatedCode);
       setIsSubmitting(false);
-    }, 800);
+    }, 600);
   };
 
   // 2. Track Feedback Status Handler
@@ -68,22 +60,32 @@ export default function FeedbackPage() {
     setTrackResult(null);
 
     if (!trackQuery.trim()) {
-      setTrackError('እባክዎ ትክክለኛ የመከታተያ ኮድ ያስገቡ');
+      setTrackError(language === 'am' ? 'እባክዎ ትክክለኛ የመከታተያ ኮድ ያስገቡ' : language === 'or' ? 'Mee koodii hordoffii sirrii galchaa' : 'Please enter a valid tracking code');
       return;
     }
 
-    // Mock Tracking Data (በእውነተኛ አሰራር ከ Strapi/DB Fetch የሚደረግ)
     if (trackQuery.toUpperCase().startsWith('WRD-')) {
+      const statusText = language === 'am' ? 'በማጣራት ላይ ያለ' : language === 'or' ? 'Qulqullaa\'aa jira' : 'Under Investigation';
+      const remarkText = language === 'am' 
+        ? 'ጉዳዩ ለሚመለከተው የሥራ ኃላፊ ተመርቶ በምርመራ ሂደት ላይ ይገኛል።' 
+        : language === 'or'
+        ? 'Dhimmi kun qaama ilaallatuuf qajeelfamee qorannoo irra jira.'
+        : 'The case has been routed to the relevant department and is currently undergoing review.';
+
       setTrackResult({
         code: trackQuery.toUpperCase(),
-        date: 'ነሐሴ 18, 2018',
-        category: 'የመልካም አስተዳደር ቅሬታ',
-        kebele: 'ቀበሌ 03',
-        status: 'በሂደት_ላይ', // 'አዲስ' | 'በሂደት_ላይ' | 'የተጠናቀቀ'
-        remark: 'ጉዳዩ ለሚመለከተው የሥራ ኃላፊ ተመርቶ በምርመራ ሂደት ላይ ይገኛል።',
+        date: language === 'am' ? 'ነሐሴ 18, 2018' : language === 'or' ? 'Hagayya 18, 2018' : 'Aug 24, 2026',
+        category: f.categoriesList[0] || 'Feedback',
+        kebele: f.kebeleList[2] || 'Kebele 03',
+        status: statusText,
+        remark: remarkText,
       });
     } else {
-      setTrackError('ይህ የመከታተያ ኮድ በሲስተሙ ውስጥ አልተገኘም። እባክዎ ኮዱን አረጋግጠው ዳግም ይሞክሩ።');
+      setTrackError(language === 'am' 
+        ? 'ይህ የመከታተያ ኮድ በሲስተሙ ውስጥ አልተገኘም። እባክዎ ኮዱን አረጋግጠው ዳግም ይሞክሩ።'
+        : language === 'or'
+        ? 'Koodiin kun sirna keessatti hin argamne. Mee koodicha mirkaneeffadhaa irra deebi\'aa yaalaa.'
+        : 'This tracking code was not found in our database. Please verify and try again.');
     }
   };
 
@@ -99,18 +101,26 @@ export default function FeedbackPage() {
     <div className="min-h-screen bg-slate-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         
-        {/* Header Title */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-1 text-xs font-bold text-blue-800">
-            <ShieldCheck className="w-4 h-4" />
-            <span>ግልጽ እና ተጠያቂነት ያለው አሰራር</span>
+        {/* Top Breadcrumb & Header Title */}
+        <div className="space-y-4 text-center">
+          <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-500">
+            <Link href="/" className="hover:text-blue-700 transition-colors">{f.breadcrumbHome}</Link>
+            <span>/</span>
+            <span className="text-blue-700">{f.breadcrumbFeedback}</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-900">
-            የህዝብ ቅሬታ፣ ጥቆማ እና አስተያየት መስጫ
-          </h1>
-          <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
-            በወረዳችን አገልግሎት አሰጣጥ ላይ ያለዎትን ቅሬታ ወይም የማህበረሰብ ልማት ጥቆማዎችን እዚህ ያድርሱ። ጉዳይዎን በሚሰጥዎት ኮድ መከታተል ይችላሉ።
-          </p>
+
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-1 text-xs font-bold text-blue-800">
+              <ShieldCheck className="w-4 h-4 text-blue-700" />
+              <span>{t.home.heroBadge}</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900">
+              {f.title}
+            </h1>
+            <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
+              {f.subtitle}
+            </p>
+          </div>
         </div>
 
         {/* Tab Switcher */}
@@ -123,7 +133,7 @@ export default function FeedbackPage() {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            አዲስ ጥቆማ / ቅሬታ ላክ
+            {f.tabSubmit}
           </button>
           <button
             onClick={() => setActiveTab('track')}
@@ -133,7 +143,7 @@ export default function FeedbackPage() {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            የጉዳይ ሁኔታ መከታተያ
+            {f.tabTrack}
           </button>
         </div>
 
@@ -148,10 +158,10 @@ export default function FeedbackPage() {
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black text-slate-900">
-                    መልእክትዎ በተሳካ ሁኔታ ደርሷል!
+                    {f.successTitle}
                   </h3>
                   <p className="text-sm text-slate-600 max-w-md mx-auto">
-                    ጥቆማዎ ወደ ወረዳው አቤቱታ ሰሚ ክፍል ተመርቷል። ጉዳይዎ የደረሰበትን ደረጃ ለመከታተል ይህንን ኮድ ይጠቀሙ፡
+                    {f.successDesc}
                   </p>
                 </div>
 
@@ -162,7 +172,7 @@ export default function FeedbackPage() {
                   <button
                     onClick={copyToClipboard}
                     className="p-2 hover:bg-slate-200 rounded-xl transition-colors text-slate-600"
-                    title="ኮዱን ኮፒ አድርግ"
+                    title={f.copyCode}
                   >
                     {copied ? <Check className="w-5 h-5 text-emerald-600" /> : <Copy className="w-5 h-5" />}
                   </button>
@@ -170,10 +180,21 @@ export default function FeedbackPage() {
 
                 <div className="pt-4">
                   <button
-                    onClick={() => { setSubmittedCode(null); setFormData({ fullName: '', phoneNumber: '', category: 'ቅሬታ', kebele: 'ቀበሌ 01', subject: '', message: '', isAnonymous: false }); }}
+                    onClick={() => { 
+                      setSubmittedCode(null); 
+                      setFormData({ 
+                        fullName: '', 
+                        phoneNumber: '', 
+                        category: f.categoriesList[0] || 'ቅሬታ', 
+                        kebele: f.kebeleList[0] || 'ቀበሌ 01', 
+                        subject: '', 
+                        message: '', 
+                        isAnonymous: false 
+                      }); 
+                    }}
                     className="text-sm font-bold text-blue-700 hover:underline"
                   >
-                    ተጨማሪ ሌላ መልእክት ለመላክ እዚህ ይጫኑ
+                    {f.submitAnother}
                   </button>
                 </div>
               </div>
@@ -184,8 +205,7 @@ export default function FeedbackPage() {
                 {/* Anonymous Toggle */}
                 <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
                   <div className="space-y-0.5">
-                    <span className="text-sm font-bold text-slate-900">ያለ ስም (በሚስጥር) መላክ ይፈልጋሉ?</span>
-                    <p className="text-xs text-slate-500">የግል መረጃዎን ሳይገልጹ ቅሬታዎን ማቅረብ ይችላሉ</p>
+                    <span className="text-sm font-bold text-slate-900">{f.anonymous}</span>
                   </div>
                   <input
                     type="checkbox"
@@ -199,20 +219,20 @@ export default function FeedbackPage() {
                 {!formData.isAnonymous && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700">ሙሉ ስም</label>
+                      <label className="text-xs font-bold text-slate-700">{f.fullName}</label>
                       <input
                         type="text"
-                        placeholder="ስምዎን ያስገቡ"
+                        placeholder={f.fullNamePlaceholder}
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                         className="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm focus:border-blue-600 focus:bg-white focus:outline-none"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700">ስልክ ቁጥር</label>
+                      <label className="text-xs font-bold text-slate-700">{f.phone}</label>
                       <input
                         type="tel"
-                        placeholder="09... / 07..."
+                        placeholder={f.phonePlaceholder}
                         value={formData.phoneNumber}
                         onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
                         className="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm focus:border-blue-600 focus:bg-white focus:outline-none"
@@ -224,27 +244,26 @@ export default function FeedbackPage() {
                 {/* Category & Kebele */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700">የመልእክቱ ዓይነት *</label>
+                    <label className="text-xs font-bold text-slate-700">{f.category} *</label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       className="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm focus:border-blue-600 focus:bg-white focus:outline-none"
                     >
-                      <option value="ቅሬታ">የአገልግሎት አሰጣጥ ቅሬታ</option>
-                      <option value="ጥቆማ">የመልካም አስተዳደር ጥቆማ</option>
-                      <option value="የልማት_ሀሳብ">የልማትና የመሰረተ ልማት ጥያቄ</option>
-                      <option value="አድናቆት">አድናቆት እና አስተያየት</option>
+                      {f.categoriesList.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
                     </select>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700">የሚመለከተው ቀበሌ *</label>
+                    <label className="text-xs font-bold text-slate-700">{f.kebele} *</label>
                     <select
                       value={formData.kebele}
                       onChange={(e) => setFormData({ ...formData, kebele: e.target.value })}
                       className="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm focus:border-blue-600 focus:bg-white focus:outline-none"
                     >
-                      {KEBELES.map((k) => (
+                      {f.kebeleList.map((k) => (
                         <option key={k} value={k}>{k}</option>
                       ))}
                     </select>
@@ -253,11 +272,11 @@ export default function FeedbackPage() {
 
                 {/* Subject */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700">የጉዳዩ ርዕስ *</label>
+                  <label className="text-xs font-bold text-slate-700">{f.subject} *</label>
                   <input
                     type="text"
                     required
-                    placeholder="የጉዳዩን ዋና ሃሳብ በአጭሩ ይግለጹ"
+                    placeholder={f.subjectPlaceholder}
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm focus:border-blue-600 focus:bg-white focus:outline-none"
@@ -266,11 +285,11 @@ export default function FeedbackPage() {
 
                 {/* Message Body */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700">ዝርዝር ማብራሪያ *</label>
+                  <label className="text-xs font-bold text-slate-700">{f.message} *</label>
                   <textarea
                     required
                     rows={4}
-                    placeholder="ስለ ጉዳዩ በቂ መረጃ፣ ቀን እና የተከሰተበትን ቦታ በዝርዝር ይጻፉ..."
+                    placeholder={f.messagePlaceholder}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm focus:border-blue-600 focus:bg-white focus:outline-none"
@@ -279,11 +298,10 @@ export default function FeedbackPage() {
 
                 {/* File Attachment Upload Box */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700">ማስረጃ ፋይል/ፎቶ (አማራጭ)</label>
+                  <label className="text-xs font-bold text-slate-700">Attachment (Optional)</label>
                   <div className="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-6 text-center bg-slate-50 cursor-pointer transition-colors">
                     <UploadCloud className="w-8 h-8 mx-auto text-slate-400 mb-2" />
-                    <p className="text-xs font-semibold text-slate-700">ማስረጃ ፎቶ ወይም ፒዲኤፍ (PDF) ይጫኑ</p>
-                    <p className="text-[11px] text-slate-400 mt-1">PNG, JPG, PDF እስከ 5MB</p>
+                    <p className="text-xs font-semibold text-slate-700">PNG, JPG, PDF (Max 5MB)</p>
                   </div>
                 </div>
 
@@ -294,7 +312,7 @@ export default function FeedbackPage() {
                   className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold p-4 shadow-md transition-all disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
-                  <span>{isSubmitting ? 'እየተላከ ነው...' : 'መልእክቱን ላክ'}</span>
+                  <span>{isSubmitting ? f.submitting : f.submitBtn}</span>
                 </button>
 
               </form>
@@ -309,12 +327,15 @@ export default function FeedbackPage() {
             {/* Search Box */}
             <form onSubmit={handleTrack} className="space-y-4">
               <label className="block text-sm font-bold text-slate-800">
-                የመከታተያ ኮድዎን (Tracking Code) ያስገቡ
+                {f.trackTitle}
               </label>
+              <p className="text-xs text-slate-500">
+                {f.trackDesc}
+              </p>
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="ለምሳሌ፡ WRD-2026-XXXX"
+                  placeholder={f.trackPlaceholder}
                   value={trackQuery}
                   onChange={(e) => setTrackQuery(e.target.value)}
                   className="flex-1 rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm font-mono uppercase focus:border-blue-600 focus:bg-white focus:outline-none"
@@ -324,7 +345,7 @@ export default function FeedbackPage() {
                   className="flex items-center gap-1.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold px-6 py-3 text-sm shadow-sm transition-colors"
                 >
                   <Search className="w-4 h-4" />
-                  <span>ፈልግ</span>
+                  <span>{f.trackBtn}</span>
                 </button>
               </div>
               {trackError && (
@@ -340,28 +361,28 @@ export default function FeedbackPage() {
               <div className="border border-slate-200 rounded-2xl p-6 bg-slate-50 space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-4">
                   <div>
-                    <span className="text-xs text-slate-500">የመከታተያ ቁጥር</span>
+                    <span className="text-xs text-slate-500">{f.trackingCodeLabel}</span>
                     <h3 className="text-lg font-mono font-black text-blue-700">{trackResult.code}</h3>
                   </div>
                   <span className="inline-flex items-center gap-1.5 w-fit rounded-full bg-amber-100 text-amber-800 px-3 py-1 text-xs font-bold">
                     <Clock className="w-3.5 h-3.5" />
-                    <span>በሂደት ላይ ያለ</span>
+                    <span>{trackResult.status}</span>
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-xs">
                   <div>
-                    <span className="text-slate-500">የቀረበበት ቀን፡</span>
+                    <span className="text-slate-500">Date:</span>
                     <p className="font-bold text-slate-800 mt-0.5">{trackResult.date}</p>
                   </div>
                   <div>
-                    <span className="text-slate-500">የሚመለከተው ክፍል/ቀበሌ፡</span>
+                    <span className="text-slate-500">{f.kebele}:</span>
                     <p className="font-bold text-slate-800 mt-0.5">{trackResult.kebele}</p>
                   </div>
                 </div>
 
                 <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-1.5">
-                  <span className="text-xs font-bold text-slate-700">የአስተዳደሩ ምላሽ/ሁኔታ፡</span>
+                  <span className="text-xs font-bold text-slate-700">Remarks:</span>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     {trackResult.remark}
                   </p>

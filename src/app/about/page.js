@@ -1,46 +1,23 @@
+'use client';
+
 import Link from 'next/link';
 import { 
   Building2, 
-  ArrowLeft, 
   Radio, 
-  CheckCircle2, 
-  Users, 
-  FileText, 
   Megaphone, 
   MessageSquare, 
   Share2, 
-  ArrowRight 
+  ArrowRight,
+  PhoneCall
 } from 'lucide-react';
 import VisionMissionSection from '@/components/common/VisionMissionSection';
+import { useLanguage } from '@/context/LanguageContext';
 
-export const metadata = {
-  title: 'ስለ እኛ | ራዕይ፣ ተልዕኮ እና እሴቶች | ቦሌ ክፍለ ከተማ አስተዳደር የኮሙኒኬሽን ጽህፈት ቤት',
-  description: 'የቦሌ ክፍለ ከተማ አስተዳደር የኮሙኒኬሽን ጽህፈት ቤት ተቋማዊ ራዕይ፣ ተልዕኮ እና የሚመራባቸው መሠረታዊ እሴቶች',
-};
+const respIcons = [Megaphone, MessageSquare, Building2, Share2];
 
 export default function AboutPage() {
-  const coreResponsibilities = [
-    {
-      title: 'የወቅታዊና ትክክለኛ መረጃ ስርጭት',
-      desc: 'የክፍለ ከተማውን እና የወረዳዎችን ሁለንተናዊ የልማት፣ የመልካም አስተዳደር እና የአገልግሎት አሰጣጥ መረጃዎች ለህዝብ ማድረስ።',
-      icon: Megaphone,
-    },
-    {
-      title: 'የህዝብ አስተያየትና ግብረ-መልስ ማስተናገድ',
-      desc: 'የነዋሪዎችን ጥቆማዎች፣ ጥያቄዎችና ቅሬታዎችን በመቀበል ለሚመለከታቸው የአመራር አካላት ማድረስና ፈጣን ምላሽ እንዲያገኙ ማድረግ።',
-      icon: MessageSquare,
-    },
-    {
-      title: 'የከተማይቱንና የክፍለ ከተማውን ገጽታ መገንባት',
-      desc: 'አዲስ አበባ የአፍሪካ የበለፀገች ተምሳሌት እንድትሆን የከተማዋን መልካም ገጽታ በሀገር ውስጥና በዓለም አቀፍ ደረጃ ማስተዋወቅ።',
-      icon: Building2,
-    },
-    {
-      title: 'የሚዲያ እና የህዝብ ግንኙነት ስራዎች',
-      desc: 'ከተለያዩ የመገናኛ ብዙሃን ጋር የተቀናጀ አሰራር በመዘርጋት አስተማማኝ የመረጃ ድልድይ ሆኖ ማገልገል።',
-      icon: Share2,
-    },
-  ];
+  const { t } = useLanguage();
+  const a = t.about;
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 space-y-16">
@@ -49,23 +26,23 @@ export default function AboutPage() {
         {/* Top Breadcrumb & Title */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
-            <Link href="/" className="hover:text-blue-700 transition-colors">ዋና ገጽ</Link>
+            <Link href="/" className="hover:text-blue-700 transition-colors">{a.breadcrumbHome}</Link>
             <span>/</span>
-            <span className="text-blue-700">ስለ እኛ</span>
+            <span className="text-blue-700">{a.breadcrumbAbout}</span>
           </div>
 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-200 pb-8">
             <div className="space-y-2 max-w-3xl">
               <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 border border-blue-200 px-3.5 py-1 text-xs font-bold text-blue-800">
                 <Radio className="w-3.5 h-3.5 text-blue-700" />
-                <span>ይፋዊ ተቋማዊ መግለጫ</span>
+                <span>{a.badge}</span>
               </div>
               <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-                ቦሌ ክፍለ ከተማ አስተዳደር <br />
-                <span className="text-blue-700">የኮሙኒኬሽን ጽህፈት ቤት</span>
+                {a.title1} <br />
+                <span className="text-blue-700">{a.title2}</span>
               </h1>
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed pt-1">
-                ዘመናዊ፣ ግልጽና ፈጣን የኮሙኒኬሽን ስርዓት በመዘርጋት በመንግስትና በነዋሪው መካከል ታማኝ የመረጃ ድልድይ ሆነን እንሰራለን።
+                {a.intro}
               </p>
             </div>
 
@@ -74,14 +51,14 @@ export default function AboutPage() {
                 href="/news"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-5 py-3 shadow-md transition-colors"
               >
-                <span>ወቅታዊ ዜናዎችን ይመልከቱ</span>
+                <span>{a.viewNewsBtn}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/feedback"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-bold px-5 py-3 transition-colors"
               >
-                <span>ቅሬታ ወይም ጥቆማ ላክ</span>
+                <span>{a.sendFeedbackBtn}</span>
               </Link>
             </div>
           </div>
@@ -94,19 +71,19 @@ export default function AboutPage() {
         <section className="space-y-8 pt-6">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">
-              ተቋማዊ ተግባራት
+              {a.responsibilitiesBadge}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-              የጽህፈት ቤታችን ዋና ዋና ኃላፊነቶች
+              {a.responsibilitiesTitle}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600">
-              በክፍለ ከተማችን የመረጃ ፍሰቱን ጥራትና ተደራሽነት ለማረጋገጥ የምናከናውናቸው ስራዎች
+              {a.responsibilitiesDesc}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {coreResponsibilities.map((item, idx) => {
-              const Icon = item.icon;
+            {a.responsibilities.map((item, idx) => {
+              const Icon = respIcons[idx % respIcons.length] || Megaphone;
               return (
                 <div 
                   key={idx}
@@ -131,22 +108,24 @@ export default function AboutPage() {
         <div className="rounded-3xl bg-slate-900 text-white p-8 sm:p-12 relative overflow-hidden shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div className="space-y-2 max-w-xl">
             <span className="text-xs font-bold text-blue-400 uppercase tracking-widest">
-              አብረውን ይስሩ
+              {a.contactPromptTitle}
             </span>
             <h3 className="text-2xl sm:text-3xl font-black">
-              የእርስዎ ድምጽ እና ተሳትፎ ለከተማችን እድገት ወሳኝ ነው!
+              {a.intro}
             </h3>
             <p className="text-xs sm:text-sm text-slate-300">
-              ማንኛውንም ጥቆማ፣ አስተያየት ወይም ጥያቄ በኦንላይን ፖርታላችን በኩል በቀላሉ ያድርሱን።
+              {a.contactPromptDesc}
             </p>
           </div>
-          <Link
-            href="/feedback"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3.5 text-sm shadow-lg shadow-blue-600/30 transition-all shrink-0"
-          >
-            <span>ጥቆማዎን አሁን ይላኩ</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="flex flex-wrap gap-3 shrink-0">
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3.5 text-sm shadow-lg shadow-blue-600/30 transition-all"
+            >
+              <span>{a.contactPromptBtn}</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
 
       </div>

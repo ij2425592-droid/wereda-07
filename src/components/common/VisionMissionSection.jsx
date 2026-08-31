@@ -1,3 +1,5 @@
+'use client';
+
 import { 
   Compass, 
   Target, 
@@ -12,58 +14,22 @@ import {
   HeartHandshake, 
   Building 
 } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
+
+const valueIcons = [
+  ShieldCheck,
+  Eye,
+  Award,
+  TrendingUp,
+  Sparkles,
+  Building,
+  HeartHandshake,
+  Clock,
+];
 
 export default function VisionMissionSection({ showHeader = true, className = '' }) {
-  const values = [
-    {
-      title: 'ተጠያቂነት',
-      desc: 'በምንሰጠው ማንኛውም መረጃ እና አገልግሎት ሙሉ ኃላፊነት መውሰድ።',
-      icon: ShieldCheck,
-      color: 'blue'
-    },
-    {
-      title: 'ግልጽነት',
-      desc: 'ህዝብ ትክክለኛውንና ወቅታዊውን መረጃ ያለምንም መደለያ እንዲያገኝ ማድረግ።',
-      icon: Eye,
-      color: 'emerald'
-    },
-    {
-      title: 'የላቀ አገልግሎት መስጠት',
-      desc: 'ለነዋሪው ጥራቱን የጠበቀ፣ ፈጣን እና ቀልጣፋ የኮሚዩኒኬሽን አገልግሎት መስጠት።',
-      icon: Award,
-      color: 'amber'
-    },
-    {
-      title: 'በእውቀትና በእምነት መምራት / መስራት',
-      desc: 'በሙያዊ እውቀት፣ በስነ-ምግባር እና በፅኑ እምነት ስራዎችን መተግበር።',
-      icon: TrendingUp,
-      color: 'indigo'
-    },
-    {
-      title: 'ለለውጥ ዝግጁነት',
-      desc: 'አዳዲስ አሰራሮችን እና ዘመናዊ የዲጂታል ቴክኖሎጂዎችን ለመቀበል ሁሌም ዝግጁ መሆን።',
-      icon: Sparkles,
-      color: 'purple'
-    },
-    {
-      title: 'ለከተማችን ገፅታ ግንባታ ግንባር ቀደም ሚና',
-      desc: 'የአዲስ አበባን እና የክፍለ ከተማችንን መልካም ገፅታ በዓለም አቀፍ ደረጃ ማስተዋወቅ።',
-      icon: Building,
-      color: 'cyan'
-    },
-    {
-      title: 'የጋራ መግባባት ለመፍጠር መታገል',
-      desc: 'በመንግስት እና በህብረተሰቡ መካከል ጠንካራ መተማመንና አንድነት እንዲሰፍን መስራት።',
-      icon: HeartHandshake,
-      color: 'rose'
-    },
-    {
-      title: 'ለጊዜ ላቅ ያለ ዋጋ መስጠት',
-      desc: 'ጊዜ ወሳኝ ሃብት መሆኑን ተረድቶ ፈጣን ምላሽ እና አገልግሎት በወቅቱ ማድረስ።',
-      icon: Clock,
-      color: 'orange'
-    },
-  ];
+  const { t } = useLanguage();
+  const vm = t.visionMission;
 
   return (
     <section className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 ${className}`}>
@@ -72,13 +38,13 @@ export default function VisionMissionSection({ showHeader = true, className = ''
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 border border-blue-200 px-4 py-1 text-xs font-bold text-blue-800">
             <Building className="w-3.5 h-3.5" />
-            <span>ቦሌ ክፍለ ከተማ አስተዳደር የኮሙኒኬሽን ጽህፈት ቤት</span>
+            <span>{vm.badge}</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            ራዕይ፣ ተልዕኮ እና እሴቶች
+            {vm.title}
           </h2>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-            የጽህፈት ቤታችን ተቋማዊ አቅጣጫዎች፣ ዓላማዎች እና የምንመራባቸው መሠረታዊ መርሆች
+            {vm.subtitle}
           </p>
         </div>
       )}
@@ -96,25 +62,25 @@ export default function VisionMissionSection({ showHeader = true, className = ''
                 <Compass className="w-7 h-7" />
               </div>
               <span className="rounded-full bg-blue-500/20 border border-blue-400/30 px-3.5 py-1 text-xs font-bold text-blue-300">
-                የ 2022 ዓ.ም ግብ
+                {vm.visionTarget}
               </span>
             </div>
 
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-blue-400">ተቋማዊ ራዕይ</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-blue-400">{vm.visionTitle}</span>
               <h3 className="text-2xl sm:text-3xl font-black text-white mt-1">
-                ራዕይ (Vision)
+                {vm.visionTitle}
               </h3>
             </div>
 
             <p className="text-sm sm:text-base text-blue-100/90 leading-relaxed font-medium">
-              «በ2022 ዓ.ም ጠንካራ የኮሙኒኬሽን ስርዓት በመዘርጋት በቂና የተሟላ መረጃ ያለው፣ በከተማዋ ሁለንተናዊ እድገት ንቁ ተሳትፎ የሚያደርግ ህብረተሰብ በመፍጠር ከተማችን አዲስ አበባ የአፍሪካ የበለፀገች ተምሳሌት ሆና ማየት።»
+              «{vm.visionText}»
             </p>
           </div>
 
           <div className="pt-6 mt-6 border-t border-blue-800/50 flex items-center gap-2 text-xs font-semibold text-blue-300">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>ጠንካራ የመረጃ ተደራሽነትና የህዝብ ንቁ ተሳትፎ</span>
+            <span>{vm.objectives ? vm.objectives[0] : ''}</span>
           </div>
         </div>
 
@@ -128,25 +94,25 @@ export default function VisionMissionSection({ showHeader = true, className = ''
                 <Target className="w-7 h-7" />
               </div>
               <span className="rounded-full bg-emerald-500/20 border border-emerald-400/30 px-3.5 py-1 text-xs font-bold text-emerald-300">
-                ቀዳሚ ተልዕኮ
+                {vm.missionTarget}
               </span>
             </div>
 
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">ተቋማዊ ተልዕኮ</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">{vm.missionTitle}</span>
               <h3 className="text-2xl sm:text-3xl font-black text-white mt-1">
-                ተልዕኮ (Mission)
+                {vm.missionTitle}
               </h3>
             </div>
 
             <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-medium">
-              «በጽህፈት ቤቱ የተለያዩ የኮሙኒኬሽን አግባቦችን በመጠቀም ዘመናዊ፣ ግልጽ እና ፈጣን ምላሽ መስጠትን ባህል ያደረገ የኮሙኒኬሽን ስርዓት በመዘርጋትና በዘርፉ መሪ ሚና በመጫወት እንዲሁም በመንግስትና በህዝቡ መካከል ጥራት ያለው እና ለሁሉም ነዋሪ ተደራሽ የመረጃ ፍሰት እንዲኖር ማድረግ።»
+              «{vm.missionText}»
             </p>
           </div>
 
           <div className="pt-6 mt-6 border-t border-slate-700/60 flex items-center gap-2 text-xs font-semibold text-emerald-300">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>ዘመናዊ፣ ፈጣን እና ግልጽ የኮሙኒኬሽን ድልድይ</span>
+            <span>{vm.objectives ? vm.objectives[1] : ''}</span>
           </div>
         </div>
 
@@ -156,19 +122,19 @@ export default function VisionMissionSection({ showHeader = true, className = ''
       <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
           <div className="space-y-1">
-            <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">የአሰራር መርሆቻችን</span>
+            <span className="text-xs font-bold text-blue-700 uppercase tracking-wider">{vm.valuesTitle}</span>
             <h3 className="text-2xl sm:text-3xl font-black text-slate-900">
-              ተቋማዊ እሴቶች (Core Values)
+              {vm.valuesTitle}
             </h3>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 max-w-md">
-            በእያንዳንዱ የስራ ክፍላችን እና አገልግሎታችን የምንመራባቸው እና የምንጠብቃቸው መሠረታዊ እሴቶች
+            {vm.valuesSubtitle}
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {values.map((val, idx) => {
-            const Icon = val.icon;
+          {vm.values.map((val, idx) => {
+            const Icon = valueIcons[idx % valueIcons.length] || ShieldCheck;
             return (
               <div 
                 key={idx}
